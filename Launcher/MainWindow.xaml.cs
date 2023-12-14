@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Net.WebSockets;
+using System.Security.Policy;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +12,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static System.Net.WebRequestMethods;
+using System.Net.Sockets;
+using System.Net;
+using System.Text.Json;
+using Tommy;
+using File = System.IO.File;
 
 namespace Launcher
 {
@@ -18,6 +25,7 @@ namespace Launcher
     /// </summary>
     public partial class MainWindow : Window
     {
+        WebSocketController CurrentConnect = new WebSocketController();
         public void StartDownloadFiles()
         {
             DownloadManager downloadFiles = new DownloadManager();
@@ -34,10 +42,10 @@ namespace Launcher
         }
         public MainWindow()
         {
-            
             DataManager.ReadTomlFile();
+            CurrentConnect.Connect();
             InitializeComponent();
-            downloadbar.Value = 10;
+            CurrentConnect.GetNews();
         }
         private void Tollbar_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -51,6 +59,16 @@ namespace Launcher
      
                 StartDownloadFiles();
            
+        }
+        private void LeftPanel_Main_MousePress(object sender, MouseEventArgs e)
+        {
+            MainGrid.Visibility = Visibility.Visible;
+            NewsGrid.Visibility = Visibility.Hidden;
+        }
+        private void LeftPanel_News_MousePress(object sender, MouseEventArgs e)
+        {
+            MainGrid.Visibility = Visibility.Hidden;
+            NewsGrid.Visibility = Visibility.Visible;
         }
     }
 }
