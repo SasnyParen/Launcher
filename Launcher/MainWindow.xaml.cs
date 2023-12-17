@@ -17,6 +17,7 @@ using System.Net;
 using System.Text.Json;
 using Tommy;
 using File = System.IO.File;
+using System.Diagnostics;
 
 namespace Launcher
 {
@@ -26,6 +27,7 @@ namespace Launcher
     public partial class MainWindow : Window
     {
         WebSocketController CurrentConnect = new WebSocketController();
+        public static string GAME_PATH;
         public void StartDownloadFiles()
         {
             DownloadManager downloadFiles = new DownloadManager();
@@ -43,9 +45,13 @@ namespace Launcher
         public MainWindow()
         {
             DataManager.ReadTomlFile();
-            CurrentConnect.Connect();
+           /// CurrentConnect.Connect();
             InitializeComponent();
-            CurrentConnect.GetNews();
+            // CurrentConnect.GetNews();
+            Trace.WriteLine("!!!");
+            GAME_PATH = GameFounder.FindPath();
+            
+
         }
         private void Tollbar_MouseDown(object sender, MouseButtonEventArgs e)
         {

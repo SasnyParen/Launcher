@@ -1,4 +1,7 @@
-﻿using System.Net;
+﻿using Launcher;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
@@ -34,6 +37,10 @@ public class DownloadManager
                 filesdownload++;
                 Download(CurrentFile.url, CurrentFile.fileName);
             }
+            else
+            {
+                Process.Start(MainWindow.GAME_PATH);
+            }
         };
         
     }
@@ -49,6 +56,10 @@ public class DownloadManager
     }    
     public void StartDownload()
     {
+        DownloadPath = MainWindow.GAME_PATH.TrimEnd("hl2.exe".ToCharArray())+ "garrysmod/lua/bin";
+        Trace.WriteLine(DownloadPath);
+        DirectoryInfo di = Directory.CreateDirectory(DownloadPath);
+        DownloadPath = DownloadPath + "/";
         CurrentFile = files[0];
         filesdownload = 1; filesall = files.Count;
         Download(CurrentFile.url, CurrentFile.fileName);
