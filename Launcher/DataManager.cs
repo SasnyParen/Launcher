@@ -12,10 +12,16 @@ public static class DataManager {
     {
         return Data;
     }
-    public static void ReadTomlFile()
+    public static void Read()
     {
         StreamReader reader = File.OpenText("temp.toml");
         Data = TOML.Parse(reader);
+    }
+    public static void Save()
+    {
+        StreamWriter writer = File.CreateText("temp.toml");
+        Data.WriteTo(writer);   
+        writer.Flush();
     }
 }
 

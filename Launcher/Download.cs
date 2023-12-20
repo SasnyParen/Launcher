@@ -5,6 +5,7 @@ using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using Tommy;
 
 public class DownloadFile
 {
@@ -22,13 +23,15 @@ public class DownloadManager
     private WebClient webClient = new WebClient();
     private List<DownloadFile> files = new List<DownloadFile>();
     private DownloadFile CurrentFile;
+    private TomlTable DownloadFiles = new TomlTable();
     public int filesdownload, filesall;
     public WebClient GetWebClient { get { return webClient; } }
     public DownloadFile GetDownloadFile { get { return CurrentFile; } }
-    public DownloadManager()
+    public DownloadManager()    
     {
         webClient.DownloadFileCompleted += (s, e) =>
         {
+            DownloadFiles.Add(CurrentFile.fileName, true);
             files.Remove(CurrentFile);
             
             if (files.Count != 0)
@@ -40,6 +43,9 @@ public class DownloadManager
             else
             {
                 Process.Start(MainWindow.GAME_PATH);
+                TomlTable settings = DataManager.GetTomlData();
+                settings.Add("DownloadFiles", DownloadFiles);
+                DataManager.Save();
             }
         };
         

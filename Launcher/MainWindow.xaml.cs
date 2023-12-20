@@ -18,6 +18,7 @@ using System.Text.Json;
 using Tommy;
 using File = System.IO.File;
 using System.Diagnostics;
+using Microsoft.Win32;
 
 namespace Launcher
 {
@@ -27,6 +28,7 @@ namespace Launcher
     public partial class MainWindow : Window
     {
         WebSocketController CurrentConnect = new WebSocketController();
+        TomlTable settings;
         public static string GAME_PATH;
         public void StartDownloadFiles()
         {
@@ -42,14 +44,46 @@ namespace Launcher
                 TextDownload.Text = "Скачивание: " + downloadFiles.GetDownloadFile.fileName + " ("+ downloadFiles.filesdownload+"/"+ downloadFiles.filesall+")";
             };
         }
+        public void UpdateGamePath(string path)
+        {
+            GAME_PATH = path;
+            TextBoxGamePath.Text = path;
+            if (settings.HasKey("GAME_PATH"))
+            {
+                settings["GAME_PATH"] = path;
+                DataManager.Save();
+            }
+            else
+            {
+                settings.Add("GAME_PATH", path);
+                Debug.WriteLine("Save ...");
+                DataManager.Save();
+            }
+        }
+        public void SettingsInitial()
+        {
+            if (settings.HasKey("GAME_PATH"))
+            {
+                GAME_PATH = settings["GAME_PATH"];
+                TextBoxGamePath.Text = GAME_PATH;
+            }
+            else
+            {
+                GAME_PATH = GameFounder.FindPath();
+                TextBoxGamePath.Text = GAME_PATH;
+                settings.Add("GAME_PATH", GAME_PATH);
+                Debug.WriteLine("Save ...");
+                DataManager.Save();
+            }
+        }
         public MainWindow()
         {
-            DataManager.ReadTomlFile();
-           /// CurrentConnect.Connect();
+            DataManager.Read();
+            settings = DataManager.GetTomlData();
+           // CurrentConnect.Connect();
             InitializeComponent();
             // CurrentConnect.GetNews();
-            Trace.WriteLine("!!!");
-            GAME_PATH = GameFounder.FindPath();
+            SettingsInitial();
             
 
         }
@@ -70,11 +104,35 @@ namespace Launcher
         {
             MainGrid.Visibility = Visibility.Visible;
             NewsGrid.Visibility = Visibility.Hidden;
+            SettingsGrid.Visibility = Visibility.Hidden;
         }
         private void LeftPanel_News_MousePress(object sender, MouseEventArgs e)
         {
             MainGrid.Visibility = Visibility.Hidden;
             NewsGrid.Visibility = Visibility.Visible;
+            SettingsGrid.Visibility = Visibility.Hidden;
         }
+        private void LeftPanel_Setting_MousePress(object sender, MouseEventArgs e)
+        {
+            MainGrid.Visibility = Visibility.Hidden;
+            NewsGrid.Visibility = Visibility.Hidden;
+            SettingsGrid.Visibility = Visibility.Visible;
+        }
+        private void SelectGamePath(object sender, MouseEventArgs e)
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+
+            openFileDialog1.InitialDirectory = "c:\\";
+            openFileDialog1.RestoreDirectory = true;
+            openFileDialog1.ShowDialog();
+
+            UpdateGamePath(openFileDialog1.FileName);
+
+        }//AutoFindGame
+        private void AutoFindGame(object sender, MouseEventArgs e)
+        {
+            GAME_PATH = GameFounder.FindPath();
+            UpdateGamePath(GAME_PATH);
+        }//AutoFindGame
     }
 }

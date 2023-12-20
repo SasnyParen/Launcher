@@ -17,12 +17,13 @@
 
         <Button Content="Button" HorizontalAlignment="Left" Height="40" Margin="0,39,0,0" VerticalAlignment="Top" Width="40" MouseLeftButtonDown = "LeftPanel_Main_MousePress" MouseDown = "LeftPanel_Main_MousePress"/>
         <Button Content="Button" HorizontalAlignment="Left" Height="40" Margin="0,79,0,0" VerticalAlignment="Top" Width="40" MouseLeftButtonDown = "LeftPanel_News_MousePress" MouseDown = "LeftPanel_News_MousePress"/>
+        <Button Content="Button" HorizontalAlignment="Left" Height="40" Margin="0,119,0,0" VerticalAlignment="Top" Width="40" MouseLeftButtonDown = "LeftPanel_Setting_MousePress" MouseDown = "LeftPanel_Setting_MousePress"/>
         <Grid Margin="40,44,0,0" x:Name="MainGrid" Visibility="Hidden">
             <ProgressBar Name="downloadbar" HorizontalAlignment="Center" Height="30" Margin="0,477,0,0" VerticalAlignment="Top" Width="960" Minimum="0" Maximum="100" Value="0"/>
             <TextBlock Name="TextDownload"  HorizontalAlignment="Left" Margin="-1,477,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" FontSize="20" Width="314" Height="29"/>
             <Button Content="Играть" HorizontalAlignment="Left" Height="28" Margin="768,448,0,0" VerticalAlignment="Top" Width="192" MouseDown="PlayButton_MouseDown"/>
         </Grid>
-        <Grid Margin="40,39,0,0" x:Name="NewsGrid">
+        <Grid Margin="40,39,0,0" x:Name="NewsGrid" Visibility="Hidden">
             <ScrollViewer Height="511" Width="960" UseLayoutRounding="False">
                 <WrapPanel>
                     <Button Content="Button" Height="437" Width="290" Margin="11,11,11,11"/>
@@ -31,9 +32,17 @@
                     <Button Content="Button" Height="437" Width="290" Margin="11,11,11,11" />
                     <Button Content="Button"  Height="437" Width="290" Margin="11,11,11,11" />
                 </WrapPanel>
-
             </ScrollViewer>
-
+        </Grid>
+        <Grid Margin="40,39,0,0" x:Name="SettingsGrid">
+            <TextBox x:Name="TextBoxGamePath" HorizontalAlignment="Left" Height="19" Margin="10,10,0,0" TextWrapping="Wrap" Text="Путь до игры" VerticalAlignment="Top" Width="516"/>
+            <Button Content="Изменить" HorizontalAlignment="Left" Height="19" Margin="531,10,0,0" VerticalAlignment="Top" Width="61" MouseLeftButtonDown = "SelectGamePath" MouseDown = "SelectGamePath" />
+            <Button Content="Авто-определение" HorizontalAlignment="Left" Height="19" Margin="597,10,0,0" VerticalAlignment="Top" Width="110" MouseLeftButtonDown = "AutoFindGame" MouseDown = "AutoFindGame" />
+            <CheckBox Content="Включить Multi-Core" HorizontalAlignment="Left" Height="16" Margin="10,41,0,0" VerticalAlignment="Top" Width="137"/>
+            <CheckBox Content="Отключить Отражения" HorizontalAlignment="Left" Height="16" Margin="10,62,0,0" VerticalAlignment="Top" Width="151"/>
+            <CheckBox Content="Отключиться отображение в дискорде" HorizontalAlignment="Left" Height="16" Margin="10,83,0,0" VerticalAlignment="Top" Width="235"/>
+            <CheckBox Content="CheckBox" HorizontalAlignment="Left" Height="16" Margin="10,104,0,0" VerticalAlignment="Top" Width="108"/>
+            <CheckBox Content="CheckBox" HorizontalAlignment="Left" Height="16" Margin="10,125,0,0" VerticalAlignment="Top" Width="108"/>
 
         </Grid>
 
