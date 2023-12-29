@@ -10,5 +10,19 @@
 
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="icons\close.png" />
+    <None Remove="icons\news.png" />
+    <None Remove="icons\play.png" />
+    <None Remove="icons\settings.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="icons\close.png" />
+    <Resource Include="icons\news.png" />
+    <Resource Include="icons\play.png" />
+    <Resource Include="icons\settings.png" />
+  </ItemGroup>
+
 
 </Project>

@@ -19,19 +19,26 @@ using Tommy;
 using File = System.IO.File;
 using System.Diagnostics;
 using Microsoft.Win32;
+using System.Windows.Media.TextFormatting;
 
 namespace Launcher
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    
     public partial class MainWindow : Window
     {
+        public static bool IsConnectedToServer;
         WebSocketController CurrentConnect = new WebSocketController();
         TomlTable settings;
         public static string GAME_PATH;
         public void StartDownloadFiles()
         {
+            if (!CheckTruePath()) {
+                TextDownload.Text = "Ошибка запуска: Игра указана не верно";
+                return;
+            }
             DownloadManager downloadFiles = new DownloadManager();
             downloadFiles.AddQuery("https://media.discordapp.net/attachments/881430976926973952/1178381352442265600/image.png", "test.png")
                 .AddQuery("https://github.com/fluffy-servers/gmod-discord-rpc/releases/download/1.2/gmcl_gdiscord_win32.dll", "gmcl_gdiscord_win32.dll")
@@ -76,16 +83,21 @@ namespace Launcher
                 DataManager.Save();
             }
         }
+        public static bool CheckTruePath()
+        {
+            bool containsSteamLibrary = GAME_PATH.Contains("SteamLibrary", StringComparison.OrdinalIgnoreCase);
+            bool containsSteamApps = GAME_PATH.Contains("steamapps", StringComparison.OrdinalIgnoreCase);
+            bool containsGarrysMod = GAME_PATH.Contains("GarrysMod", StringComparison.OrdinalIgnoreCase);
+            return containsSteamLibrary && containsSteamApps && containsGarrysMod;
+        }
         public MainWindow()
         {
             DataManager.Read();
             settings = DataManager.GetTomlData();
-           // CurrentConnect.Connect();
             InitializeComponent();
-            // CurrentConnect.GetNews();
+            CurrentConnect.Connect();
+            CurrentConnect.GetNews();
             SettingsInitial();
-            
-
         }
         private void Tollbar_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -94,31 +106,36 @@ namespace Launcher
                 this.DragMove();
             }
         }
-        private void PlayButton_MouseDown(object sender, MouseButtonEventArgs e)
+        private void CloseWPF(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+        private void PlayButton_MouseDown(object sender, RoutedEventArgs e)
         {
      
                 StartDownloadFiles();
            
         }
-        private void LeftPanel_Main_MousePress(object sender, MouseEventArgs e)
+        private void LeftPanel_Main_MousePress(object sender, RoutedEventArgs e)
         {
+
             MainGrid.Visibility = Visibility.Visible;
             NewsGrid.Visibility = Visibility.Hidden;
             SettingsGrid.Visibility = Visibility.Hidden;
         }
-        private void LeftPanel_News_MousePress(object sender, MouseEventArgs e)
+        private void LeftPanel_News_MousePress(object sender, RoutedEventArgs e)
         {
             MainGrid.Visibility = Visibility.Hidden;
             NewsGrid.Visibility = Visibility.Visible;
             SettingsGrid.Visibility = Visibility.Hidden;
         }
-        private void LeftPanel_Setting_MousePress(object sender, MouseEventArgs e)
+        private void LeftPanel_Setting_MousePress(object sender, RoutedEventArgs e)
         {
             MainGrid.Visibility = Visibility.Hidden;
             NewsGrid.Visibility = Visibility.Hidden;
             SettingsGrid.Visibility = Visibility.Visible;
         }
-        private void SelectGamePath(object sender, MouseEventArgs e)
+        private void SelectGamePath(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
@@ -129,7 +146,7 @@ namespace Launcher
             UpdateGamePath(openFileDialog1.FileName);
 
         }//AutoFindGame
-        private void AutoFindGame(object sender, MouseEventArgs e)
+        private void AutoFindGame(object sender, RoutedEventArgs e)
         {
             GAME_PATH = GameFounder.FindPath();
             UpdateGamePath(GAME_PATH);
